@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import { getAllTasks, type Task } from "./indexedDB";
 
-function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+// ... dentro de export default function App() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  useEffect(() => {
+    getAllTasks().then(setTasks).catch(console.error);
+  }, []);
+const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+const [canInstall, setCanInstall] = useState(false);
 
-export default App
+const [isOffline, setIsOffline] = useState(!navigator.onLine);
+useEffect(() => {
+  const on = () => setIsOffline(false), off = () => setIsOffline(true);
+  window.addEventListener('online', on); window.addEventListener('offline', off);
+  return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
+}, []);
+
+// Capturamos el evento y mostramos el botón
+useEffect(() => {
+  const onBIP = (e: any) => {
+    // Android/desktop Chrome disparan este evento cuando la app es instalable
+    e.preventDefault();             // evitamos el mini-infobar
+    setDeferredPrompt(e);           // guardamos el evento para usarlo luego
+    setCanInstall(true);            // mostramos el botón
+  };
+  window.addEventListener('beforeinstallprompt', onBIP);
+
+  const onInstalled = () => {
+    console.log('[PWA] App instalada');
+    setDeferredPrompt(null);
+    setCanInstall(false);
+  };
+  window.addEventListener('appinstalled', onInstalled);
+
+  return () => {
+    window.removeEventListener('beforeinstallprompt', onBIP);
+    window.removeEventListener('appinstalled', onInstalled);
+  };
+}, []);
+
+const handleInstallClick = async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();                        // abre el diálogo nativo
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log('[PWA] userChoice:', outcome);      // 'accepted' | 'dismissed'
+  setDeferredPrompt(null);
+  setCanInstall(false);
+};

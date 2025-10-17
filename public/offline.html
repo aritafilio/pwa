@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sin conexión</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #c8f7c5 0%, #a8e6a2 100%);
+      font-family: 'Poppins', system-ui, sans-serif;
+      color: #2f3e2f;
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      padding: 40px 30px;
+      max-width: 400px;
+      position: relative;
+      z-index: 10;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      color: #256d1b;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      line-height: 1.5;
+    }
+
+    .hint {
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+
+    /* Dibujitos decorativos */
+    .leaf, .cloud {
+      position: absolute;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .leaf {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 40% 40%, #58b947 0%, #256d1b 80%);
+      border-radius: 50% 0 50% 50%;
+      transform: rotate(-25deg);
+    }
+
+    .cloud {
+      width: 100px;
+      height: 60px;
+      background: #fff;
+      border-radius: 50px;
+      box-shadow: 30px 0 0 #fff, 60px 0 0 #fff;
+    }
+
+    .leaf.one { top: 10%; left: 5%; transform: rotate(-30deg) scale(1.1); }
+    .leaf.two { bottom: 15%; right: 10%; transform: rotate(45deg) scale(0.9); }
+    .cloud.one { top: 15%; right: 20%; }
+    .cloud.two { bottom: 20%; left: 15%; }
+
+    /* Botón opcional para recargar */
+    button {
+      margin-top: 1rem;
+      background-color: #58b947;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #44993a;
+    }
+  </style>
+</head>
+<body>
+  <div class="leaf one"></div>
+  <div class="leaf two"></div>
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+
+  <div class="card">
+    <h1>🌱 Estás sin conexión</h1>
+    <p>Parece que perdiste la conexión a Internet.</p>
+    <p class="hint">No te preocupes, podrás seguir usando lo que ya se haya guardado en caché.</p>
+    <button onclick="location.reload()">Reintentar 🔄</button>
+  </div>
+</body>
+</html>

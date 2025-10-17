@@ -1,10 +1,8 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swUrl = '/service-worker.js';
+    navigator.serviceWorker.register(swUrl)
+      .then(reg => console.log('[SW] registrado en:', reg.scope))
+      .catch(console.error);
+  });
+}
