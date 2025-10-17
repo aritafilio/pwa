@@ -1,80 +1,45 @@
 PWA Lista de Tareas — Offline-First con IndexedDB, Background Sync y Push
-
 Aplicación web progresiva que permite crear/editar/eliminar tareas funcionando sin conexión, guardando en IndexedDB y sincronizando con el backend cuando vuelve la red mediante Background Sync. Incluye Service Worker con estrategias de caché (App Shell), página offline, soporte de notificaciones push (VAPID o FCM), e instalación como app.
 Características
-
 Formulario offline → guarda tareas en IndexedDB cuando no hay red.
-
 Outbox + Background Sync → encola cambios (create/update/delete) y los reintenta al reconectar.
-
 Service Worker:
-
 App Shell cache-first (HTML/CSS/JS).
-
 Imágenes stale-while-revalidate.
-
 API network-first con fallback a caché.
-
 offline.html para navegación sin conexión.
-
 Notificaciones Push:
-
 Solicitud de permiso en la UI.
-
 Manejo push/notificationclick en el SW.
-
 Compatible con web-push (VAPID) o Firebase Cloud Messaging (opcional).
-
 Instalable como PWA (manifest + SW + served over HTTP(S)).
 ⚙️ Requisitos
-
 Node 18+ (recomendado 20+)
-
 Navegador con Service Workers y Background Sync (Chrome/Edge)
-
 Para push con VAPID: web-push en el backend y par de claves.
-
 Para push con FCM: proyecto Firebase y firebase-messaging-sw.js.
-
 🚀 Puesta en marcha (frontend)
 # 1) Instalar dependencias
 npm i
-
-# 2) Desarrollo
+Desarrollo
 npm run dev
-
-# 3) Build producción
+Build producción
 npm run build
-
-# 4) Preview (sirve dist/)
+ Preview (sirve dist/)
 npm run preview
-
 🗄️ IndexedDB + Outbox
-
 Archivo clave: src/indexedDB.ts
-
 Apertura DB/Stores (openDB) crea tasks y outbox:
-
 Cola de operaciones con queueOutbox.
-
 CRUD de tareas: addTaskToDB, updateTaskInDB, removeTaskFromDB.
-
 Archivo src/useTasks.tsx:
-
 Maneja estado UI + llamadas a IndexedDB.
-
 Si está offline, encola en outbox y registra sync-entries.
-
 Si está online, actualiza DB y (opcionalmente) llama a backend directo.
-
 🧰 Service Worker (caché, offline, sync, push)
-
 Archivo clave: public/service-worker.js (extracto):
-
 Install: precache del App Shell y offline.html.
-
 Fetch routing:
-
 navigate → cache-first con fallback a /offline.html.
 
 *.{html,css,js} → cache-first.
